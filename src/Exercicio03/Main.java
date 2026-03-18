@@ -7,6 +7,7 @@ public class Main {
     static Scanner sc = new Scanner(System.in);
     static int index = 0;
 
+
     public static void main(String[] args) {
         int opcao;
 
@@ -22,26 +23,44 @@ public class Main {
             switch (opcao){
                 case 1 -> cadastrar();
                 case 2 -> carregar();
-                case 3 -> consultar();
-                case 4 -> passar();
+                case 3 -> consultarSaldo();
+                case 4 -> passarNaCatraca();
+                case 5 -> System.out.println("Até breve! ");
+                default -> System.out.println("Opção inválida");
             }
-
-        }while ();
+            System.out.println("---------------------------------------------");
+        }while (opcao!=5);
 
 
 
 
     }
 
-    private static void passar() {
+    private static void passarNaCatraca() {
+        BilheteUnico bilheteUnico = pesquisar();
+        if (bilheteUnico != null){
+            if (!bilheteUnico.passarNaCatraca()){
+                System.out.println("Saldo insuficiente");
+            }
+            System.out.println("Saldo atual: "+ bilheteUnico.saldo);
+        }
     }
 
-    private static void consultar() {
-
+    private static void consultarSaldo() {
+        BilheteUnico bilheteUnico = pesquisar();
+        if (bilheteUnico != null){
+            System.out.println("Saldo atual: " + bilheteUnico.saldo);
+        }
     }
 
     private static void carregar() {
-
+        double valor;
+        BilheteUnico bilheteUnico = pesquisar();
+        if (bilheteUnico != null){
+            System.out.print("Valor da recarga: ");
+            valor=sc.nextDouble();
+            bilheteUnico.carregar(valor);
+        }
     }
 
     private static void cadastrar() {
@@ -50,15 +69,31 @@ public class Main {
         String tipoTarifa;
 
         if (index < bilheteUnico.length){
-            System.out.println("Nome do Usuário: ");
+            System.out.print("Nome do Usuário: ");
             nome = sc.next();
-            System.out.println("CPF: ");
+            System.out.print("CPF: ");
             cpf = sc.nextLong();
-            System.out.println("Tipo de tarifa (estudante | professor | comum): ");
+            System.out.print("Tipo de tarifa (estudante | professor | comum): ");
             tipoTarifa = sc.next();
             bilheteUnico[index]=new BilheteUnico(new Usuario(nome,cpf,tipoTarifa));
             index ++;
-
         }
+        else {
+            System.out.println("Erro ao gerar bilhete, favor procurar um posto de atendimento");
+        }
+
+    }
+
+    private static BilheteUnico pesquisar(){
+        long cpf;
+        System.out.print("CPF para pesquisar: ");
+        cpf=sc.nextLong();
+        for (int i = 0; i< index; i++){
+            if (bilheteUnico[i].usuario.cpf == cpf ) {
+                return bilheteUnico[i];
+            }
+        }
+        System.out.println("Bilhete não encontrado");
+        return null;
     }
 }
