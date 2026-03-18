@@ -21,15 +21,15 @@ public class MonitorEnergia {
         for (double valor : consumoDiario){
             media += valor;
         }
-        return media / consumoDiario.length;
+        return media / indice  ;
     }
 
-    public double calcularMedia(int inicio, int fim){
+    public double calcularMedia(int inicio , int fim ){
         double media=0;
-        for (int i = inicio; i<= fim ; i++){
+        for (int i = (inicio - 1); i< fim  ; i++){
             media += consumoDiario[i];
         }
-        return media / (fim - inicio);
+        return media / (fim - inicio + 1);
     }
 
 }

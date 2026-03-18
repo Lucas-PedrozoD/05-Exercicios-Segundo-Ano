@@ -10,5 +10,6 @@ public class Main {
         monitorEnergia.registrar(3);
 
         System.out.println(monitorEnergia.calcularMedia());
+        System.out.println(monitorEnergia.calcularMedia(1,2));
     }
 }
