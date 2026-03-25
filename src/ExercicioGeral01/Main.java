@@ -1,5 +1,6 @@
 package ExercicioGeral01;
 
+import java.text.DecimalFormat;
 import java.util.Scanner;
 
 public class Main {
@@ -11,6 +12,7 @@ public class Main {
 
     public static void main(String[] args) {
         int opcao;
+
 
         do {
 
@@ -26,11 +28,43 @@ public class Main {
 
             switch (opcao) {
                 case (1) -> registrarEntrada();
+                case (2) -> registrarSaida();
+                case (3) -> veiculosEstacionados();
+                case (4) -> imprimirReceita();
+                case (5) -> System.out.println("ParkEasy Agradece");
+                default -> System.out.println("Opção Invalida");
 
             }
 
 
         } while (opcao != 5);
+        System.out.println();
+    }
+
+    private static void imprimirReceita() {
+        double total = 0;
+        for (int i = 0; i< indexControle; i++){
+            if (controles[i].horaSaida != null){
+                total += controles[i].calcularEstadia();
+            }
+        }
+        System.out.println("Receita até o momento: " + total +"");
+    }
+
+
+    public static void registrarSaida() {
+        DecimalFormat df = new DecimalFormat("#,##0.00");
+        double valor;
+        String horaSaida;
+        Controle controle = pesquisarC();
+        if (controle != null){
+            System.out.print("Informe a hora de saida (hh:mm) --> ");
+            horaSaida = sc.next();
+            controle.horaSaida=horaSaida;
+            valor = controle.calcularEstadia();
+            System.out.println("Valor da estadia: R$ "+ df.format(valor));
+        }
+
     }
 
     private static void registrarEntrada() {
@@ -38,20 +72,21 @@ public class Main {
         String nome;
         long cpf ;
         String horaEntrada;
-        Veiculo veiculo = pesquisar();
+        System.out.println("Placa -->");
+        placa = sc.next().toUpperCase();
+        Veiculo veiculo = pesquisarV(placa);
         if (veiculo == null){
-            System.out.print("Placa --> ");
-            placa = sc.next().toUpperCase();
-            System.out.println("Modelo --> ");
+            System.out.print("Modelo --> ");
             modelo = sc.next();
-            System.out.println("Marca --> ");
+            System.out.print("Marca --> ");
             marca = sc.next();
-            System.out.println("Nome do proprietário --> ");
+            System.out.print("Nome do proprietário --> ");
             nome = sc.next();
-            System.out.println("CPF --> ");
+            System.out.print("CPF --> ");
             cpf = sc.nextLong();
             Proprietario proprietario = new Proprietario(nome,cpf);
-            veiculos[indexVeiculo] = new Veiculo(placa, marca, modelo, proprietario);
+            veiculo = new Veiculo(placa, marca, modelo, proprietario);
+            veiculos[indexVeiculo] = veiculo;
             indexVeiculo++;
         }
 
@@ -62,15 +97,15 @@ public class Main {
     }
 
     public static void veiculosEstacionados(){
+
         for (int i = 0; i< indexControle; i++){
-            System.out.println(controles[indexControle]);
+            if (controles[i].horaSaida == null){
+                System.out.println(controles[i].veiculo.placa);
+            }
         }
     }
 
-    private static Veiculo pesquisar(){
-        String placa;
-        System.out.print("Placa para pesquisa --> ");
-        placa = sc.next().toUpperCase();
+    private static Veiculo pesquisarV(String placa){
         for (int i = 0; i < indexVeiculo; i++){
             if (veiculos[i].placa.equals(placa)){
                 return veiculos [i];
@@ -79,4 +114,18 @@ public class Main {
         System.out.println("Placa não encontrada");
         return null;
     }
+
+    private static Controle pesquisarC(){
+        String placa;
+        System.out.print("Placa para pesquisa --> ");
+        placa = sc.next().toUpperCase();
+        for (int i = 0; i < indexControle; i++){
+            if (controles[i].veiculo.placa.equals(placa)){
+                return controles[i];
+            }
+        }
+        System.out.println("Placa não encontrada");
+        return null;
+    }
+
 }
